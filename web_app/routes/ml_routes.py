@@ -16,4 +16,4 @@ def iris():
 def predict():
     print('PREDICTING...')
     print('FORM DATA:', dict(request.form))
-    return jsonify('message':'TODO')
+    return jsonify({'message':'TODO'})

@@ -22,8 +22,10 @@ if __name__ == "__main__":
     for i in dir(user):
         print(i)
     print(user.name)
+    print(user.screen_name)
     print(user.profile_image_url)
     print(user.description)
+    print(user.location)
     print(user.followers_count)
     # public_tweets = api.home_timeline()
     # for tweet in public_tweets:
