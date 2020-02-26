@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 API_KEY = os.getenv('BASILICA_API_KEY') 
 
-connection = Connection(API_KEY)
+connection = basilica.Connection(API_KEY)
 
 if __name__ == "__main__":
     sentences = ["Hello world!", "How are you?"]

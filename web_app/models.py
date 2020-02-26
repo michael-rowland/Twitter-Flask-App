@@ -7,9 +7,13 @@ migrate = Migrate()
 # todo HOW DO I USE SQLITE HERE INSTEAD?
 class Tweet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    tweet = db.Column(db.String(128))
-    userid = db.Column(db.Integer)
+    user_id = db.Column(db.BigInteger, db.ForeignKey('user.id'))
+    full_text = db.Column(db.String(500))
+    embedding = db.Column(db.PickleType)
 
 class User(db.Model):
-    userid = db.Column(db.Integer, primary_key=True)
-    user = db.Column(db.String(128))
+    id = db.Column(db.BigInteger, primary_key=True)
+    screen_name = db.Column(db.String(128), nullable=False)
+    name = db.Column(db.String)
+    location = db.Column(db.String)
+    followers_count = db.Column(db.Integer)
