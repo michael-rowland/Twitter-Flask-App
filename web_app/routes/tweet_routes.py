@@ -1,20 +1,9 @@
-
 from flask import Blueprint, jsonify, request, render_template
-
 from web_app.models import db, Tweet, User
 
 tweet_routes = Blueprint("tweet_routes", __name__)
 
-
 def get_tweets_from_db():
-    return [
-       {"id": 1, "userid": "111", 'tweet': 'test 1'},
-       {"id": 2, "userid": "222", 'tweet': 'test 2'},
-       {"id": 3, "userid": "333", 'tweet': 'test 3'},
-       {"id": 4, "userid": "444", 'tweet': 'test 4'},
-       {"id": 5, "userid": "555", 'tweet': 'test 5'},
-       {"id": 6, "userid": "666", 'tweet': 'test 6'},
-       ]
     tweets =[]
     tweet_records = Tweet.query.all()
     for t in tweet_records:
@@ -23,7 +12,6 @@ def get_tweets_from_db():
         del d["_sa_instance_state"]
         tweets.append(d)
     return tweets
-    
 
 @tweet_routes.route("/tweets.json")
 def list_tweets():
@@ -43,7 +31,7 @@ def new_tweet():
 def create_tweet():
     print("FORM DATA:", dict(request.form))
 
-    new_tweet = Tweet(title=request.form["tweet"], userid=request.form["userid"])
+    new_tweet = Tweet(tweet=request.form["tweet"], userid=request.form["userid"])
     db.session.add(new_tweet)
     db.session.commit()
 

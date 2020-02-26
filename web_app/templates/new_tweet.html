@@ -12,14 +12,13 @@
 
     <p>Please fill out the form and submit to create a new tweet!</p>
 
-
-    <form action="/tweet/create" method="POST">
+    <form action="/tweets/create" method="POST">
 
         <label>Title:</label>
-        <input type="text" name="title" placeholder="Tweet XYZ" value="Tweet XYZ">
+        <input type="text" name="tweet" placeholder="Tweet XYZ" value="Tweet XYZ">
 
         <label>Author:</label>
-        <select name="author_name">
+        <select name="userid">
           <option value="A1">Author 1</option>
           <option value="A2">Author 2</option>
           <option value="A3">Author 3</option>
