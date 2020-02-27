@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify, render_template, request
+from flask import Blueprint, jsonify, render_template, redirect, request
 from web_app.models import db
 
 admin_routes = Blueprint('admin_routes', __name__)
@@ -7,4 +7,5 @@ admin_routes = Blueprint('admin_routes', __name__)
 def reset_db():
     db.drop_all()
     db.create_all()
-    return jsonify({'message': 'Database has been reset'})
+    # return jsonify({'message': 'Database has been reset'})
+    return redirect('/')

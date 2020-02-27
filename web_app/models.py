@@ -17,3 +17,5 @@ class User(db.Model):
     name = db.Column(db.String)
     location = db.Column(db.String)
     followers_count = db.Column(db.Integer)
+    profile = db.Column(db.String)
+

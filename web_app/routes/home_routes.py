@@ -1,66 +1,70 @@
-from flask import Blueprint, flash, jsonify, render_template, request
-from web_app.models import db, User
+from flask import Blueprint, flash, jsonify, render_template, redirect, request
+from web_app.models import db, User, Tweet
 from web_app.twitter_service import twitter_api
+from web_app.basilica_service import connection as basilica_client
 
 home_routes = Blueprint('home_routes', __name__)
 
 @home_routes.route('/')
 def index():
-    return render_template('index.html')
+    users = User.query.all()
+    return render_template('index.html', users=users)
 
-# @home_routes.route('/users/<screen_name>', methods=["POST"])
-# @home_routes.route('/users/<screen_name>')
 @home_routes.route('/new_user', methods=['POST'])
 def new_user():
-    # print('USER:', dict(request.form))
 
-    # user = User(screen_name=request.form['user'])
-    # print(user)
-    # db.session.add(user)
-    # db.session.commit()
-    # try:
-    screen_name = request.form['screen_name']
-    twitter_api_client = twitter_api()
+    try:
+        screen_name = request.form['screen_name']
+        twitter_api_client = twitter_api()
 
-    twitter_user = twitter_api_client.get_user(screen_name)
-    db_user = User.query.get(twitter_user.id) or User(id=twitter_user.id)
-    db_user.screen_name = twitter_user.screen_name
-    db_user.name = twitter_user.name
-    db_user.location = twitter_user.location
-    db_user.followers_count = twitter_user.followers_count
-    db.session.add(db_user)
-    db.session.commit()
-    
-    # flash(f'User "{twitter_user.screen_name} successfully added!', 'test')
-    return jsonify({
-        'message': 'User successfully added',
-        'name': db_user.name,
-        'screen_name': db_user.screen_name,
-        'location': db_user.location,
-        'followers_count': db_user.followers_count
-    })
+        twitter_user = twitter_api_client.get_user(screen_name)
+        db_user = User.query.get(twitter_user.id) or User(id=twitter_user.id)
+        db_user.screen_name = twitter_user.screen_name
+        db_user.name = twitter_user.name
+        db_user.location = twitter_user.location
+        db_user.followers_count = twitter_user.followers_count
+        db_user.profile = twitter_user.profile_image_url_https
+        db.session.add(db_user)
+        db.session.commit()
+        
+        statuses = twitter_api_client.user_timeline(
+            screen_name, 
+            tweet_mode="extended", 
+            count=50, 
+            exclude_replies=True, 
+            include_rts=False)
+        statuses_full_text = [status.full_text for status in statuses]
 
+        embeddings = basilica_client.embed_sentences(
+            statuses_full_text,
+            model='twitter')
+        embeddings_list = [embedding for embedding in embeddings]
 
-    '''
-    twitter_user = twitter_api_client.get_user(screen_name)
-    print(twitter_user.id_str)
-    print(twitter_user.followers_count)
-    # db_user = User.query.get(twitter_user.id) or User(id=twitter_user.id)
-    db_user = User(id=twitter_user.id)
-    db_user.screen_name = twitter_user.screen_name
-    db_user.name = twitter_user.name
-    db_user.location = twitter_user.location
-    db_user.followers_count = twitter_user.followers_count
-    print(db_user)
-    # db.session.add(db_user)
-    # db.session.commit()
-    # return jsonify(db_user)
-    
-    # except:
-    #     return jsonify({'message': 'user not found'})
+        counter = 0
+        for status in statuses:
+            db_tweet = Tweet.query.get(status.id) or Tweet(id=status.id)
+            db_tweet.user_id = status.author.id
+            db_tweet.full_text = status.full_text
+            db_tweet.embedding = embeddings_list[counter]
+            db.session.add(db_tweet)
+            counter += 1
+        db.session.commit()
 
+        # flash(f'User "{twitter_user.screen_name} successfully added!', 'test')
+        return redirect('/')
+ 
+    except:
+        return redirect('/user_not_found')
 
-    
+@home_routes.route('/users')
+def all_users():
+    users = User.query.all()
+    return render_template('users.html', users=users)
 
+@home_routes.route('/user_not_found')
+def user_not_found():
+    return render_template('user_not_found.html')
 
-'''
+# @home_routes.route('/user/<screen_name>')
+# def user(screen_name=None):
+#     return render_template('user.html', screen_name=)

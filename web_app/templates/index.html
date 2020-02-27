@@ -4,15 +4,27 @@
     <title>Homepage</title>
 </head>
 <body>
-    <h1>Homepage</h1>
+    <h1>Twitoff</h1>
 
+    <h3>Add New User</h3>
     <form action="/new_user" method="POST">
-    <!-- <form> -->
-        <!-- <label>Title:</label> -->
         <input type="text" name="screen_name" placeholder="Enter User Here">
         <br>
         <button>Add User</button>
     </form>
-
+    <!-- <form action="/reset" method="GET">
+        <h3>Reset Database</h3>
+        <button>Reset</button>
+    </form> -->
+    <h3>Users Added</h3>
+    {% if users %}
+        <ul>
+        {% for user in users %}
+            <li>{{ user.name }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No users entered.</p>
+    {% endif %}
 </body>
 </html>
