@@ -56,6 +56,9 @@ def new_user():
     except:
         return redirect('/user_not_found')
 
+# ********************
+# DELETE THIS
+# ********************
 @home_routes.route('/users')
 def all_users():
     users = User.query.all()

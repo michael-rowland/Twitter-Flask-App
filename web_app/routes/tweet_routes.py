@@ -1,3 +1,7 @@
+# ********************
+# DELETE THIS
+# ********************
+
 from flask import Blueprint, jsonify, request, render_template
 from web_app.models import db, Tweet, User
 

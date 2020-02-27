@@ -4,7 +4,6 @@ from flask_migrate import Migrate
 db = SQLAlchemy()
 migrate = Migrate()
 
-# todo HOW DO I USE SQLITE HERE INSTEAD?
 class Tweet(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.BigInteger, db.ForeignKey('user.id'))

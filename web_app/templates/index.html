@@ -31,14 +31,14 @@
     {% endif %}
     </select>
     <br>
-    <input type="text" name="sample_tweet" placeholder="Enter sample tweet here">
+    <input type="text" name="tweet_text" placeholder="Sample tweet">
     <br>
     <button>Submit</button>
     </form>
 
     <h3>Add New User</h3>
     <form action='/new_user' method='POST'>
-        <input type='text' name='screen_name' placeholder='Enter User Here'>
+        <input type='text' name='screen_name' placeholder="User's handle">
         <br>
         <button>Add User</button>
     </form>
@@ -57,9 +57,9 @@
         <p>No users entered.</p>
     {% endif %}
 
-    <!-- <h3>Reset Database</h3>
+    <h3>Reset Database</h3>
     <form action='/reset' method='GET'>
         <button>Reset</button>
-    </form> -->
+    </form>
 </body>
 </html>
