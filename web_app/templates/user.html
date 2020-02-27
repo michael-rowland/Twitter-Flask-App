@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ user.name }}</title>
+</head>
+<body>
+    <form action="/" method="GET">
+        <button>Return Home</button>
+    </form>
+    <h1>{{ user.name }}</h1>
+    <p>@{{ user.screen_name }}</p>
+    <img src= {{ user.profile }}>
+    <p>Followers: {{ user.followers_count }}</p>
+    <p>Location: {{ user.location }}</p>
+
+    <h1>Tweets</h1>
+    {% if tweets %}
+        <ul>
+            {% for tweet in tweets %}
+            <li>{{ tweet.full_text }}</li>
+            {% endfor %}
+        </ul>
+        {% else %}
+            <p>This user has not tweeted!</p>
+    {% endif %}
+
+</body>
+</html>

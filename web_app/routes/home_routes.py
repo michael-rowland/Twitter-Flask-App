@@ -19,7 +19,7 @@ def new_user():
 
         twitter_user = twitter_api_client.get_user(screen_name)
         db_user = User.query.get(twitter_user.id) or User(id=twitter_user.id)
-        db_user.screen_name = twitter_user.screen_name
+        db_user.screen_name = twitter_user.screen_name.lower()
         db_user.name = twitter_user.name
         db_user.location = twitter_user.location
         db_user.followers_count = twitter_user.followers_count
@@ -50,7 +50,7 @@ def new_user():
             counter += 1
         db.session.commit()
 
-        # flash(f'User "{twitter_user.screen_name} successfully added!', 'test')
+        flash(f'User "{twitter_user.name}" successfully added!')
         return redirect('/')
  
     except:
@@ -65,6 +65,9 @@ def all_users():
 def user_not_found():
     return render_template('user_not_found.html')
 
-# @home_routes.route('/user/<screen_name>')
-# def user(screen_name=None):
-#     return render_template('user.html', screen_name=)
+@home_routes.route('/user/<screen_name>')
+def user(screen_name=None):
+    # try
+    user = User.query.filter_by(screen_name=screen_name).first()
+    tweets = Tweet.query.filter_by(user_id=user.id).all()
+    return render_template('user.html', user=user, tweets=tweets)
