@@ -1,7 +1,7 @@
 from flask import Blueprint, flash, jsonify, render_template, redirect, request
+from web_app.basilica_service import connection as basilica_client
 from web_app.models import db, User, Tweet
 from web_app.twitter_service import twitter_api
-from web_app.basilica_service import connection as basilica_client
 
 home_routes = Blueprint('home_routes', __name__)
 
@@ -12,7 +12,6 @@ def index():
 
 @home_routes.route('/new_user', methods=['POST'])
 def new_user():
-
     try:
         screen_name = request.form['screen_name']
         twitter_api_client = twitter_api()
@@ -30,7 +29,7 @@ def new_user():
         statuses = twitter_api_client.user_timeline(
             screen_name, 
             tweet_mode="extended", 
-            count=50, 
+            count=200, 
             exclude_replies=True, 
             include_rts=False)
         statuses_full_text = [status.full_text for status in statuses]
@@ -53,16 +52,9 @@ def new_user():
         flash(f'User "{twitter_user.name}" successfully added!')
         return redirect('/')
  
-    except:
+    except Exception as e:
+        print(e)
         return redirect('/user_not_found')
-
-# ********************
-# DELETE THIS
-# ********************
-@home_routes.route('/users')
-def all_users():
-    users = User.query.all()
-    return render_template('users.html', users=users)
 
 @home_routes.route('/user_not_found')
 def user_not_found():

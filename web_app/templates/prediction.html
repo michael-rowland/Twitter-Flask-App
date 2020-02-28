@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Tweet Prediction</title>
+</head>
+<body>
+    <h3>Tweet Prediction</h3>
+    <p>
+        <b>Sample Tweet:</b> <blockquote>{{ tweet_text }}</blockquote>
+        <br>
+        This tweet is more likely to be said by <b>{{ winner }}</b> than {{ loser }} with <b>{{ prediction_pct }} confidence.</b>
+    </p>
+    <form action="/" method="GET">
+            <button>Return Home</button>
+    </form>
+</body>
+</html>
